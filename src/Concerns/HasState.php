@@ -2,8 +2,6 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
-use Exception;
-
 trait HasState
 {
     public function dispatchToState($event)
@@ -16,7 +14,7 @@ trait HasState
                 //TODO: throw UnexpectedStateException
             }
             return $newState;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->refresh();
             throw $e;
         }
