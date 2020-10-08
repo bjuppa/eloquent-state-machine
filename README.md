@@ -22,6 +22,10 @@ The current state handles the current event and *transitions* the model into ano
 - States have *entry* and *exit* actions and events have *actions* that manipulate the model during a *transition*.
 - Any anomalies in events or transitions throws exceptions, triggering transaction rollback.
 
+## Requirements
+
+Row-level locking is only supported in MySQL / MariaDB and PostgreSQL.
+
 ## Installation
 
 You can install the package via composer:
