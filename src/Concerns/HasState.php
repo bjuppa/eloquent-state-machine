@@ -2,8 +2,6 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
-use Throwable;
-
 trait HasState
 {
     use CanLockPessimistically;
@@ -11,16 +9,16 @@ trait HasState
     public function dispatchToState($event)
     {
         try {
-            //TODO: Wrap in transactionWithRefresh
-            $newState = $this->getState()->dispatch($event);
+            return $this->transactionWithRefreshForUpdate(function () use ($event) {
+                return tap($this->getState()->dispatch($event), function ($newState) {
+                    $this->refresh();
+                    if (get_class($this->getState()) != get_class($newState)) {
+                        //TODO: throw UnexpectedStateException
+                    }
+                });
+            });
+        } finally {
             $this->refresh();
-            if (get_class($this->getState()) != get_class($newState)) {
-                //TODO: throw UnexpectedStateException
-            }
-            return $newState;
-        } catch (Throwable $e) {
-            $this->refresh();
-            throw $e;
         }
     }
 
