@@ -1,6 +1,6 @@
 <?php
 
-namespace Bjuppa\EloquentStateMachine;
+namespace Bjuppa\EloquentStateMachine\Concerns;
 
 use Exception;
 
