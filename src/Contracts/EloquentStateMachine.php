@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Contracts;
 
-interface HasStateContract
+interface EloquentStateMachine
 {
     public function getState(); //TODO: set return type
 }
