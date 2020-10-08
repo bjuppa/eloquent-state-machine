@@ -2,6 +2,8 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
+use Throwable;
+
 trait HasState
 {
     use CanLockPessimistically;
@@ -16,7 +18,7 @@ trait HasState
                 //TODO: throw UnexpectedStateException
             }
             return $newState;
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             $this->refresh();
             throw $e;
         }
