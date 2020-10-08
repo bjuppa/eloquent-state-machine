@@ -1,0 +1,45 @@
+{
+    "name": "bjuppa/eloquent-state-machine",
+    "description": "Finite state machines for Laravel Eloquent models",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "state machine"
+    ],
+    "homepage": "https://github.com/bjuppa/eloquent-state-machine",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Björn Nilsved",
+            "email": "nilsved@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bjuppa\\EloquentStateMachine\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bjuppa\\EloquentStateMachine\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
