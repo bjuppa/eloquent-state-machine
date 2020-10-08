@@ -4,6 +4,8 @@ namespace Bjuppa\EloquentStateMachine\Concerns;
 
 trait HasState
 {
+    use CanLockPessimistically;
+
     public function dispatchToState($event)
     {
         try {
