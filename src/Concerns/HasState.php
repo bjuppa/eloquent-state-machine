@@ -2,6 +2,8 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
+use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
+
 trait HasState
 {
     use CanLockPessimistically;
@@ -10,10 +12,10 @@ trait HasState
     {
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
-                return tap($this->getState()->dispatch($event), function ($newState) {
+                return tap($this->getState()->dispatch($event), function ($newState) use ($event) {
                     $this->refresh();
                     if (get_class($this->getState()) != get_class($newState)) {
-                        //TODO: throw UnexpectedStateException
+                        throw new UnexpectedStateException();
                     }
                 });
             });
