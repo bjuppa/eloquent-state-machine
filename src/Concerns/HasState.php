@@ -3,10 +3,13 @@
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
+use Bjuppa\EloquentStateMachine\SimpleState;
 
 trait HasState
 {
     use CanLockPessimistically;
+
+    abstract public function getState(): SimpleState;
 
     public function dispatchToState($event)
     {
@@ -59,4 +62,6 @@ trait HasState
     {
         return $this->save();
     }
+
+    abstract public function getConnection();
 }
