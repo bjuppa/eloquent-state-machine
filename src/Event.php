@@ -18,18 +18,21 @@ abstract class Event
 
     /**
      * Manipulations to be done to model during transition.
-     * Override this in your subclass to define "actions".
      *
-     * Called when the transition is in the common superstate.
+     * Declare this in Event subclasses to define "actions" that should be
+     * executed when the transition is in the common superstate.
+     *
      * Throw any Exception to abort the transition.
+     *
+     * Side-effects not directly manipulating the model, like queuing notifications,
+     * should be put off to after the transition using
+     * $this->deferSideEffect(function() { ... })
+     *
      * @return void
      *
      * @throws \Throwable
      */
-    protected function actions(): void
-    {
-        //
-    }
+    abstract protected function actions(): void;
 
     public function deferSideEffect(Closure $callback)
     {
