@@ -2,9 +2,9 @@
 
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
-use RuntimeException;
+use DomainException;
 
-class UnexpectedStateException extends RuntimeException
+class UnexpectedStateException extends DomainException
 {
     public function __construct()
     {

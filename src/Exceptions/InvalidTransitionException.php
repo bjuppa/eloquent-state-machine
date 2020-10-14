@@ -2,9 +2,9 @@
 
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
-use RuntimeException;
+use DomainException;
 
-class InvalidTransitionException extends RuntimeException
+class InvalidTransitionException extends DomainException
 {
     public function __construct()
     {
