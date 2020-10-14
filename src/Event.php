@@ -3,12 +3,13 @@
 namespace Bjuppa\EloquentStateMachine;
 
 use \Illuminate\Database\Eloquent\Model;
+use Closure;
 
 abstract class Event
 {
-    public $model;
+    protected Model $model;
 
-    //TODO: Consider having a public $payload on events, for guidance.
+    private array $sideEffects = [];
 
     public function __construct(Model $model)
     {
@@ -25,8 +26,25 @@ abstract class Event
      *
      * @throws \Throwable
      */
-    public function processActions(): void
+    protected function actions(): void
     {
         //
+    }
+
+    public function deferSideEffect(Closure $callback)
+    {
+        array_push($this->sideEffects, $callback);
+    }
+
+    public function getActions(): array
+    {
+        return [function () {
+            $this->actions();
+        }];
+    }
+
+    public function getSideEffects(): array
+    {
+        return $this->sideEffects;
     }
 }
