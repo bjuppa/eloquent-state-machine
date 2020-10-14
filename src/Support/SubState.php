@@ -17,9 +17,10 @@ abstract class SubState extends State
     {
         parent::__construct($model);
         $this->superState = new static::$superStateClass($model);
-        if (!$this->superState instanceof SuperState) {
+        //TODO: check for trait using class_uses()
+        if (!$this->superState instanceof HasDefaultSubState) {
             throw new DomainException(
-                get_class() . '::$superStateClass ' . static::$superStateClass . ' must implement' . SuperState::class
+                get_class() . '::$superStateClass ' . static::$superStateClass . ' must implement' . HasDefaultSubState::class
             );
         }
     }

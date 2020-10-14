@@ -6,7 +6,7 @@ use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use DomainException;
 
-trait SuperState
+trait HasDefaultSubState
 {
     public static string $defaultStateClass;
 
