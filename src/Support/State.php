@@ -29,6 +29,7 @@ abstract class State
 
     protected function transitionToState(Event $event, string $to, string $via = null): SimpleState
     {
+        return (new Transition($this, $to, $via))->execute($event);
     }
 
     protected function dispatchInternal(Event $event): bool
