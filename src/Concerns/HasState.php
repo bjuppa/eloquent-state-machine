@@ -4,6 +4,8 @@ namespace Bjuppa\EloquentStateMachine\Concerns;
 
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
 use Bjuppa\EloquentStateMachine\SimpleState;
+use Bjuppa\EloquentStateMachine\Support\State;
+use Illuminate\Database\Connection;
 
 trait HasState
 {
@@ -11,7 +13,7 @@ trait HasState
 
     abstract public function getState(): SimpleState;
 
-    public function dispatchToState($event)
+    public function dispatchToState($event): SimpleState
     {
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
@@ -27,7 +29,7 @@ trait HasState
         }
     }
 
-    protected function makeState($classname)
+    protected function makeState($classname): State
     {
         return new $classname($this);
     }
@@ -63,5 +65,5 @@ trait HasState
         return $this->save();
     }
 
-    abstract public function getConnection();
+    abstract public function getConnection(): Connection;
 }
