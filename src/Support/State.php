@@ -6,6 +6,7 @@ use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 abstract class State
 {
@@ -51,7 +52,12 @@ abstract class State
 
     public function make(string $state): State
     {
-        // TODO: validate that class is a State
+        if (!is_a($state, State::class)) {
+            throw new InvalidArgumentException(
+                $state . ' is not a ' . State::class
+            );
+        }
+
         return new $state($this->model);
     }
 }

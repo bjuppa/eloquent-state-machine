@@ -8,6 +8,7 @@ use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use Closure;
 use Illuminate\Database\Connection;
+use InvalidArgumentException;
 
 trait HasState
 {
@@ -43,8 +44,13 @@ trait HasState
         }
     }
 
-    protected function makeState($classname): State
+    protected function makeState(string $classname): State
     {
+        if (!is_a($classname, State::class)) {
+            throw new InvalidArgumentException(
+                $classname . ' is not a ' . State::class
+            );
+        }
         return new $classname($this);
     }
 
