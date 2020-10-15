@@ -66,5 +66,19 @@ class Transition
 
     protected function buildPath()
     {
+        $sourceBranch = collect($this->source->branch());
+        $targetBranch = collect($this->source->make($this->to)->branch());
+
+        $common = $sourceBranch->first(function ($source) use ($targetBranch) {
+            return $targetBranch->contains(function ($target) use ($source) {
+                return $target->is($source);
+            });
+        });
+
+        if (!$common) {
+            throw new InvalidTransitionException($this);
+        }
+
+        $this->buildPathVia(get_class($common));
     }
 }
