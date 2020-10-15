@@ -2,10 +2,10 @@
 
 namespace Bjuppa\EloquentStateMachine;
 
-use Bjuppa\EloquentStateMachine\Support\State;
+use Bjuppa\EloquentStateMachine\Support\SubState;
 use Bjuppa\EloquentStateMachine\Support\HasDefaultSubState;
 
-abstract class CompositeState extends State
+abstract class CompositeState extends SubState
 {
     use HasDefaultSubState;
 }
