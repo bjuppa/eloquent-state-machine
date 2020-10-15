@@ -50,7 +50,7 @@ abstract class State
 
     public function is(State $state): bool
     {
-        return get_class() === get_class($state) && $this->model->is($state->model);
+        return get_class($this) === get_class($state) && $this->model->is($state->model);
     }
 
     public function branch(): array

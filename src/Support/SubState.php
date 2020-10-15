@@ -18,18 +18,18 @@ abstract class SubState extends State
         parent::__construct($model);
 
         if (!static::$superStateClass) {
-            throw new DomainException(get_class() . '::$superStateClass must be specified');
+            throw new DomainException(get_class($this) . '::$superStateClass must be specified');
         }
 
         if (!is_a($this->superState, State::class)) {
             throw new DomainException(
-                get_class() . '::$superStateClass (' . static::$superStateClass . ') must be a ' . State::class
+                get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must be a ' . State::class
             );
         }
 
         if (is_a($this->superState, SimpleState::class)) {
             throw new DomainException(
-                get_class() . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
+                get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
             );
         }
 

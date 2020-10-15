@@ -13,7 +13,7 @@ trait HasDefaultSubState
     public function defaultEntry(Event $event): SimpleState
     {
         if (!static::$defaultStateClass) {
-            throw new DomainException(get_class() . '::$defaultStateClass must be specified to handle default entry into the composite state');
+            throw new DomainException(get_class($this) . '::$defaultStateClass must be specified to handle default entry into the composite state');
         }
         return $this->transitionToState($event, static::$defaultStateClass);
     }
