@@ -30,6 +30,7 @@ class Transition
 
         collect($event->getActions())->each(fn (Closure $callback) => $callback());
 
+        /* @var $state State */
         $state = collect($this->enter)->each(fn (SubState $state) => $state->entry($event))->last();
 
         return $state instanceof SimpleState ? $state : $state->defaultEntry($event);
