@@ -38,7 +38,14 @@ abstract class State
         return $this->handleInternal($event);
     }
 
-    protected abstract function dispatchLocal(Event $event): SimpleState;
+    protected function dispatchLocal(Event $event): SimpleState
+    {
+        return tap($this->handle($event), function ($state) use ($event) {
+            if (!$state) {
+                throw new UnhandledEventException($event);
+            }
+        });
+    }
 
     public function is(State $state): bool
     {
