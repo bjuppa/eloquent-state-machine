@@ -13,16 +13,16 @@ class Transition
     public string $to;
     public string $via;
 
-    protected State $origin;
+    protected State $source;
 
     protected array $exit = [];
     protected array $enter = [];
 
-    public function __construct(State $from, string $to, string $via = null)
+    public function __construct(State $source, string $to, string $via = null)
     {
-        $this->origin = $from;
+        $this->source = $source;
 
-        $this->from = get_class($from);
+        $this->from = get_class($source);
         $this->to = $to;
         $this->via = $via;
 
@@ -47,7 +47,7 @@ class Transition
 
     protected function buildPathVia(string $viaStateName)
     {
-        $this->exit = collect($this->origin->branch())
+        $this->exit = collect($this->source->branch())
             ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
             ->toArray();
 
@@ -55,7 +55,7 @@ class Transition
             throw new InvalidTransitionException($this);
         }
 
-        $this->enter = collect($this->origin->make($this->to)->branch())
+        $this->enter = collect($this->source->make($this->to)->branch())
             ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
             ->reverse()->toArray();
 
