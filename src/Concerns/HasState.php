@@ -2,9 +2,11 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
+use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
+use Closure;
 use Illuminate\Database\Connection;
 
 trait HasState
@@ -13,20 +15,31 @@ trait HasState
 
     abstract public function getState(): SimpleState;
 
-    public function dispatchToState($event): SimpleState
+    public function dispatchToState(Event $event): SimpleState
     {
         try {
-            return $this->transactionWithRefreshForUpdate(function () use ($event) {
-                return tap($this->getState()->dispatch($event), function (State $destination) use ($event) {
-                    $this->refresh();
-                    if (!$destination->is($this->getState())) {
-                        throw new UnexpectedStateException($destination, $this->getState(), $event);
-                    }
-                });
-            });
+            return tap(
+                $this->transactionWithRefreshForUpdate(function () use ($event) {
+                    return tap(
+                        $this->getState()->dispatch($event),
+                        function (State $destination) use ($event) {
+                            $this->refresh();
+                            if (!$destination->is($this->getState())) {
+                                throw new UnexpectedStateException(
+                                    $destination,
+                                    $this->getState(),
+                                    $event
+                                );
+                            }
+                        }
+                    );
+                }),
+                function () use ($event) {
+                    collect($event->getSideEffects())->each(fn (Closure $callback) => $callback());
+                }
+            );
         } finally {
             $this->refresh();
-            // TODO: execute deferred side effects from $event
         }
     }
 
