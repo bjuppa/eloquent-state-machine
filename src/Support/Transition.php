@@ -51,7 +51,7 @@ class Transition
             ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
             ->toArray();
 
-        if (!collect($this->exit)->last() instanceof SubState) {
+        if (count($this->exit) && !collect($this->exit)->last() instanceof SubState) {
             throw new InvalidTransitionException($this);
         }
 
@@ -59,7 +59,7 @@ class Transition
             ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
             ->reverse()->toArray();
 
-        if (!collect($this->enter)->first() instanceof SubState) {
+        if (count($this->enter) && !collect($this->enter)->first() instanceof SubState) {
             throw new InvalidTransitionException($this);
         }
     }
