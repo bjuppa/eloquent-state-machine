@@ -17,10 +17,10 @@ trait HasState
     {
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
-                return tap($this->getState()->dispatch($event), function (State $destination) {
+                return tap($this->getState()->dispatch($event), function (State $destination) use ($event) {
                     $this->refresh();
                     if (!$destination->is($this->getState())) {
-                        throw new UnexpectedStateException();
+                        throw new UnexpectedStateException($destination, $this->getState(), $event);
                     }
                 });
             });
