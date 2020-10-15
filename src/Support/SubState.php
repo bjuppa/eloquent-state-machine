@@ -21,13 +21,19 @@ abstract class SubState extends State
             throw new DomainException(get_class() . '::$superStateClass must be specified');
         }
 
-        $this->superState = $this->make(static::$superStateClass);
+        if (!is_a($this->superState, State::class)) {
+            throw new DomainException(
+                get_class() . '::$superStateClass (' . static::$superStateClass . ') must be a ' . State::class
+            );
+        }
 
-        if ($this->superState instanceof SimpleState) {
+        if (is_a($this->superState, SimpleState::class)) {
             throw new DomainException(
                 get_class() . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
             );
         }
+
+        $this->superState = $this->make(static::$superStateClass);
     }
 
     public abstract function exit(Event $event): void;
