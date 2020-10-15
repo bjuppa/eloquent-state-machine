@@ -5,7 +5,7 @@ namespace Bjuppa\EloquentStateMachine\Support;
 use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\SimpleState;
 
-trait Dispatcher
+trait CanBeActiveState
 {
     public function dispatch(Event $event): SimpleState
     {
