@@ -21,11 +21,11 @@ abstract class SubState extends State
             throw new DomainException(get_class() . '::$superStateClass must be specified');
         }
 
-        $this->superState = new static::$superStateClass($model);
+        $this->superState = $this->make(static::$superStateClass);
 
         if ($this->superState instanceof SimpleState) {
             throw new DomainException(
-                get_class() . '::$superStateClass (' . static::$superStateClass . ') cannot be a ' . SimpleState::class
+                get_class() . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
             );
         }
     }
@@ -37,7 +37,6 @@ abstract class SubState extends State
         return parent::dispatchInternal($event) ?: $this->superState->dispatchInternal($event);
     }
 
-
     protected function dispatchLocal(Event $event): SimpleState
     {
         return $this->handle($event) ?: $this->dispatchExternal($event);
@@ -47,5 +46,10 @@ abstract class SubState extends State
     {
         $this->exit($event);
         return $this->superState->dispatchLocal($event);
+    }
+
+    public function branch(): array
+    {
+        return array_merge(parent::branch(), $this->superState->branch());
     }
 }

@@ -43,4 +43,15 @@ abstract class State
     {
         return get_class() === get_class($state) && $this->model->is($state->model);
     }
+
+    public function branch(): array
+    {
+        return [$this];
+    }
+
+    public function make(string $state): State
+    {
+        // TODO: validate that class is a State
+        return new $state($this->model);
+    }
 }
