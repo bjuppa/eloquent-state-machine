@@ -38,4 +38,9 @@ abstract class State
     }
 
     protected abstract function dispatchLocal(Event $event): SimpleState;
+
+    public function is(State $state): bool
+    {
+        return get_class() === get_class($state) && $this->model->is($state->model);
+    }
 }

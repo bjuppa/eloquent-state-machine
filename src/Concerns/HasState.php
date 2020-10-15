@@ -17,15 +17,16 @@ trait HasState
     {
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
-                return tap($this->getState()->dispatch($event), function ($newState) use ($event) {
+                return tap($this->getState()->dispatch($event), function (State $destination) {
                     $this->refresh();
-                    if (get_class($this->getState()) != get_class($newState)) {
+                    if (!$destination->is($this->getState())) {
                         throw new UnexpectedStateException();
                     }
                 });
             });
         } finally {
             $this->refresh();
+            // TODO: execute deferred side effects from $event
         }
     }
 
