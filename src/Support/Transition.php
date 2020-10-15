@@ -42,7 +42,11 @@ class Transition
         /* @var $destination State */
         $destination = collect($this->enter)->each(fn (SubState $state) => $state->entry($event))->last();
 
-        return $destination instanceof SimpleState ? $destination : $destination->defaultEntry($event);
+        while (!$destination instanceof SimpleState) {
+            $destination = $destination->defaultEntry($event);
+        }
+
+        return $destination;
     }
 
     protected function buildPathVia(string $viaStateName)
