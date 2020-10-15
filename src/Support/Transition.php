@@ -3,6 +3,7 @@
 namespace Bjuppa\EloquentStateMachine\Support;
 
 use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\Exceptions\InvalidTransitionException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Closure;
 
@@ -12,16 +13,24 @@ class Transition
     public string $to;
     public string $via;
 
+    protected State $origin;
+
     protected array $exit = [];
     protected array $enter = [];
 
     public function __construct(State $from, string $to, string $via = null)
     {
+        $this->origin = $from;
+
         $this->from = get_class($from);
         $this->to = $to;
         $this->via = $via;
 
-        // TODO: build the exit and enter states
+        if ($via) {
+            $this->buildPathVia($via);
+        } else {
+            $this->buildPath();
+        }
     }
 
     public function execute(Event $event): SimpleState
@@ -30,9 +39,32 @@ class Transition
 
         collect($event->getActions())->each(fn (Closure $callback) => $callback());
 
-        /* @var $state State */
-        $state = collect($this->enter)->each(fn (SubState $state) => $state->entry($event))->last();
+        /* @var $destination State */
+        $destination = collect($this->enter)->each(fn (SubState $state) => $state->entry($event))->last();
 
-        return $state instanceof SimpleState ? $state : $state->defaultEntry($event);
+        return $destination instanceof SimpleState ? $destination : $destination->defaultEntry($event);
+    }
+
+    protected function buildPathVia(string $viaStateName)
+    {
+        $this->exit = collect($this->origin->branch())
+            ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
+            ->toArray();
+
+        if (!collect($this->exit)->last() instanceof SubState) {
+            throw new InvalidTransitionException($this);
+        }
+
+        $this->enter = collect($this->origin->make($this->to)->branch())
+            ->takeUntil(fn (State $state) => get_class($state) === $viaStateName)
+            ->reverse()->toArray();
+
+        if (!collect($this->exit)->first() instanceof SubState) {
+            throw new InvalidTransitionException($this);
+        }
+    }
+
+    protected function buildPath()
+    {
     }
 }
