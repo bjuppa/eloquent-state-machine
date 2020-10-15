@@ -16,11 +16,16 @@ abstract class SubState extends State
     public function __construct(Model $model)
     {
         parent::__construct($model);
+
+        if (!static::$superStateClass) {
+            throw new DomainException(get_class() . '::$superStateClass must be specified');
+        }
+
         $this->superState = new static::$superStateClass($model);
-        //TODO: check for trait using class_uses()
-        if (!$this->superState instanceof HasDefaultSubState) {
+
+        if ($this->superState instanceof SimpleState) {
             throw new DomainException(
-                get_class() . '::$superStateClass ' . static::$superStateClass . ' must implement' . HasDefaultSubState::class
+                get_class() . '::$superStateClass (' . static::$superStateClass . ') cannot be a ' . SimpleState::class
             );
         }
     }
