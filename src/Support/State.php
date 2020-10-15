@@ -5,6 +5,7 @@ namespace Bjuppa\EloquentStateMachine\Support;
 use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\SimpleState;
+use DomainException;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
@@ -21,7 +22,7 @@ abstract class State
 
     public function defaultEntry(Event $event): SimpleState
     {
-        throw new UnhandledEventException($event);
+        throw new DomainException(get_class($this) . ' does not support default entry');
     }
 
     protected abstract function handleInternal(Event $event): bool;
