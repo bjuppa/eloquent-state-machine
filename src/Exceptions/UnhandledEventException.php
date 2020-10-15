@@ -11,8 +11,8 @@ class UnhandledEventException extends DomainException
 
     public function __construct(Event $event)
     {
-        parent::__construct("Event could not be handled by state.");
-
         $this->event = $event;
+
+        parent::__construct("Event could not be handled by state.");
     }
 }
