@@ -39,7 +39,7 @@ trait HasState
                     );
                 }),
                 function () use ($event) {
-                    collect($event->getSideEffects())->each(fn (Closure $callback) => $callback());
+                    $this->processEventSideEffects($event);
                 }
             );
         } finally {
@@ -72,6 +72,7 @@ trait HasState
         $event = $this->initialTransitionEvent();
         $destination = $this->rootState()->defaultEntry($event);
         $this->assertStateAfterEvent($destination, $event);
+        $this->processEventSideEffects($event);
     }
 
     /**
@@ -90,6 +91,11 @@ trait HasState
                 $event
             );
         }
+    }
+
+    protected function processEventSideEffects(StateEvent $event)
+    {
+        collect($event->getSideEffects())->each(fn (Closure $callback) => $callback());
     }
 
     /**
