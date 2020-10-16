@@ -10,6 +10,7 @@ use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use Closure;
 use DomainException;
+use Exception;
 use Illuminate\Database\Connection;
 use InvalidArgumentException;
 
@@ -44,9 +45,10 @@ trait HasState
                     $this->processEventSideEffects($event);
                 }
             );
-        } finally {
-            // If transaction was rolled back, make sure this model matches the database.
+        } catch (Exception $e) {
+            // If transaction was aborted, make sure this model matches the database
             $this->refresh();
+            throw $e;
         }
     }
 
