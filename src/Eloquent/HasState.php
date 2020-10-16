@@ -33,16 +33,19 @@ trait HasState
                 $this->transactionWithRefreshForUpdate(function () use ($event) {
                     return tap(
                         $this->getState()->dispatch($event),
+                        // Validate the new state before committing the transaction
                         function (State $destination) use ($event) {
                             $this->assertStateAfterEvent($destination, $event);
                         }
                     );
                 }),
+                // Process side effects after committing the transaction
                 function () use ($event) {
                     $this->processEventSideEffects($event);
                 }
             );
         } finally {
+            // If transaction was rolled back, make sure this model matches the database.
             $this->refresh();
         }
     }
