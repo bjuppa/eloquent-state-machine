@@ -67,7 +67,7 @@ trait HasState
         return $this->makeState($this->rootStateClass);
     }
 
-    private function initialTransition(): void
+    protected function initialTransition(): void
     {
         $event = $this->initialTransitionEvent();
         $destination = $this->rootState()->defaultEntry($event);
