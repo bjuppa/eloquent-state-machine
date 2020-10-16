@@ -4,7 +4,7 @@ namespace Bjuppa\EloquentStateMachine\Concerns;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
-use Bjuppa\EloquentStateMachine\ModelCreatedEvent;
+use Bjuppa\EloquentStateMachine\ModelCreatedStateEvent;
 use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
@@ -21,9 +21,9 @@ trait HasState
 
     abstract public function getState(): SimpleState;
 
-    protected function initialTransitionEvent(): ModelCreatedEvent
+    protected function initialTransitionEvent(): ModelCreatedStateEvent
     {
-        return new ModelCreatedEvent($this);
+        return new ModelCreatedStateEvent($this);
     }
 
     public function dispatchToState(StateEvent $event): SimpleState

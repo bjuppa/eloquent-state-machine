@@ -2,6 +2,6 @@
 
 namespace Bjuppa\EloquentStateMachine;
 
-class ModelCreatedEvent extends StateEvent
+class ModelCreatedStateEvent extends StateEvent
 {
 }
