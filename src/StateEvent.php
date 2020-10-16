@@ -2,30 +2,23 @@
 
 namespace Bjuppa\EloquentStateMachine;
 
-use \Illuminate\Database\Eloquent\Model;
-use Closure;
+use Bjuppa\EloquentStateMachine\Support\Event;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class StateEvent
+abstract class StateEvent extends Event
 {
-    protected Model $model;
-
-    private array $actions = [];
-    private array $sideEffects = [];
-
+    /**
+     * Constructor may receive and store any additional payload data needed during event handling.
+     */
     public function __construct(Model $model)
     {
-        $this->model = $model;
-
-        $this->actions = [function () {
-            $this->actions();
-        }];
+        parent::__construct($model);
     }
 
     /**
-     * Manipulations to be done to model during transition.
+     * Manipulates $this->model during transition.
      *
-     * Declare this in StateEvent subclasses to define "actions" that should be
-     * executed when the transition is in the common superstate.
+     * Actions will be executed when the transition is in the common superstate.
      *
      * Throw any Exception to abort the transition.
      *
@@ -37,20 +30,8 @@ abstract class StateEvent
      *
      * @throws \Throwable
      */
-    abstract protected function actions(): void;
-
-    public function deferSideEffect(Closure $callback)
+    protected function actions(): void
     {
-        array_push($this->sideEffects, $callback);
-    }
-
-    public function getActions(): array
-    {
-        return tap($this->actions, fn () => $this->actions = []);
-    }
-
-    public function getSideEffects(): array
-    {
-        return tap($this->sideEffects, fn () => $this->sideEffects = []);
+        //
     }
 }
