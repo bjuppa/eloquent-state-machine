@@ -9,11 +9,16 @@ abstract class Event
 {
     protected Model $model;
 
+    private array $actions = [];
     private array $sideEffects = [];
 
     public function __construct(Model $model)
     {
         $this->model = $model;
+
+        $this->actions = [function () {
+            $this->actions();
+        }];
     }
 
     /**
@@ -41,13 +46,11 @@ abstract class Event
 
     public function getActions(): array
     {
-        return [function () {
-            $this->actions();
-        }];
+        return tap($this->actions, fn () => $this->actions = []);
     }
 
     public function getSideEffects(): array
     {
-        return $this->sideEffects;
+        return tap($this->sideEffects, fn () => $this->sideEffects = []);
     }
 }
