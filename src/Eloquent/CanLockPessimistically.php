@@ -1,6 +1,6 @@
 <?php
 
-namespace Bjuppa\EloquentStateMachine\Concerns;
+namespace Bjuppa\EloquentStateMachine\Eloquent;
 
 use Closure;
 

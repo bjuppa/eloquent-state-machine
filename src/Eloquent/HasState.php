@@ -1,6 +1,6 @@
 <?php
 
-namespace Bjuppa\EloquentStateMachine\Concerns;
+namespace Bjuppa\EloquentStateMachine\Eloquent;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
