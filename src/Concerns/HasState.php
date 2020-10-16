@@ -9,6 +9,7 @@ use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use Closure;
+use DomainException;
 use Illuminate\Database\Connection;
 use InvalidArgumentException;
 
@@ -59,8 +60,8 @@ trait HasState
     protected function rootState(): RootState
     {
         if (!is_a($this->rootStateClass, RootState::class)) {
-            throw new InvalidArgumentException(
-                $this->rootStateClass . ' is not a ' . RootState::class
+            throw new DomainException(
+                get_class($this) . '::rootStateClass ' . $this->rootStateClass . ' is not a ' . RootState::class
             );
         }
         return $this->makeState($this->rootStateClass);
