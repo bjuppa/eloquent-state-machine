@@ -4,6 +4,8 @@ namespace Bjuppa\EloquentStateMachine\Concerns;
 
 use Bjuppa\EloquentStateMachine\Event;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
+use Bjuppa\EloquentStateMachine\ModelCreatedEvent;
+use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use Closure;
@@ -14,7 +16,14 @@ trait HasState
 {
     use CanLockPessimistically;
 
+    protected string $rootStateClass;
+
     abstract public function getState(): SimpleState;
+
+    protected function initialTransitionEvent(): ModelCreatedEvent
+    {
+        return new ModelCreatedEvent($this);
+    }
 
     public function dispatchToState(Event $event): SimpleState
     {
@@ -24,14 +33,7 @@ trait HasState
                     return tap(
                         $this->getState()->dispatch($event),
                         function (State $destination) use ($event) {
-                            $this->refresh();
-                            if (!$destination->is($this->getState())) {
-                                throw new UnexpectedStateException(
-                                    $destination,
-                                    $this->getState(),
-                                    $event
-                                );
-                            }
+                            $this->assertStateAfterEvent($destination, $event);
                         }
                     );
                 }),
@@ -52,6 +54,41 @@ trait HasState
             );
         }
         return new $classname($this);
+    }
+
+    protected function rootState(): RootState
+    {
+        if (!is_a($this->rootStateClass, RootState::class)) {
+            throw new InvalidArgumentException(
+                $this->rootStateClass . ' is not a ' . RootState::class
+            );
+        }
+        return $this->makeState($this->rootStateClass);
+    }
+
+    private function initialTransition(): void
+    {
+        $event = $this->initialTransitionEvent();
+        $destination = $this->rootState()->defaultEntry($event);
+        $this->assertStateAfterEvent($destination, $event);
+    }
+
+    /**
+     * Ensure the current state matches the given state.
+     * Called after processing an event.
+     *
+     * @throws UnexpectedStateException
+     */
+    public function assertStateAfterEvent(State $state, Event $event): void
+    {
+        $this->refresh();
+        if (!$state->is($this->getState())) {
+            throw new UnexpectedStateException(
+                $state,
+                $this->getState(),
+                $event
+            );
+        }
     }
 
     /**
@@ -83,6 +120,13 @@ trait HasState
     public function saveOrFail(array $options = [])
     {
         return $this->save();
+    }
+
+    protected static function bootHasState()
+    {
+        static::created(function ($model) {
+            $model->initialTransition();
+        });
     }
 
     abstract public function getConnection(): Connection;
