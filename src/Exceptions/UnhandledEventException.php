@@ -2,14 +2,14 @@
 
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use DomainException;
 
 class UnhandledEventException extends DomainException
 {
-    public Event $event;
+    public StateEvent $event;
 
-    public function __construct(Event $event)
+    public function __construct(StateEvent $event)
     {
         $this->event = $event;
 

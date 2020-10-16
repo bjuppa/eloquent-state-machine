@@ -5,7 +5,7 @@ namespace Bjuppa\EloquentStateMachine;
 use \Illuminate\Database\Eloquent\Model;
 use Closure;
 
-abstract class Event
+abstract class StateEvent
 {
     protected Model $model;
 
@@ -24,7 +24,7 @@ abstract class Event
     /**
      * Manipulations to be done to model during transition.
      *
-     * Declare this in Event subclasses to define "actions" that should be
+     * Declare this in StateEvent subclasses to define "actions" that should be
      * executed when the transition is in the common superstate.
      *
      * Throw any Exception to abort the transition.

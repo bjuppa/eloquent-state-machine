@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine;
 
-class ModelCreatedEvent extends Event
+class ModelCreatedEvent extends StateEvent
 {
     protected function actions(): void
     {

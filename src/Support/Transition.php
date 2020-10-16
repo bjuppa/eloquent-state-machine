@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\InvalidTransitionException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Closure;
@@ -33,7 +33,7 @@ class Transition
         }
     }
 
-    public function execute(Event $event): SimpleState
+    public function execute(StateEvent $event): SimpleState
     {
         collect($this->exit)->each(fn (SubState $state) => $state->exit($event));
 

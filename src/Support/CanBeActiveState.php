@@ -2,12 +2,12 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\SimpleState;
 
 trait CanBeActiveState
 {
-    public function dispatch(Event $event): SimpleState
+    public function dispatch(StateEvent $event): SimpleState
     {
         if ($this->dispatchInternal($event)) {
             return $this;

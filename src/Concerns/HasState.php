@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Concerns;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
 use Bjuppa\EloquentStateMachine\ModelCreatedEvent;
 use Bjuppa\EloquentStateMachine\RootState;
@@ -26,7 +26,7 @@ trait HasState
         return new ModelCreatedEvent($this);
     }
 
-    public function dispatchToState(Event $event): SimpleState
+    public function dispatchToState(StateEvent $event): SimpleState
     {
         try {
             return tap(
@@ -80,7 +80,7 @@ trait HasState
      *
      * @throws UnexpectedStateException
      */
-    public function assertStateAfterEvent(State $state, Event $event): void
+    public function assertStateAfterEvent(State $state, StateEvent $event): void
     {
         $this->refresh();
         if (!$state->is($this->getState())) {

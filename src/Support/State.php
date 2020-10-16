@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use DomainException;
@@ -18,28 +18,28 @@ abstract class State
         $this->model = $model;
     }
 
-    public abstract function entry(Event $event): void;
+    public abstract function entry(StateEvent $event): void;
 
-    public function defaultEntry(Event $event): SimpleState
+    public function defaultEntry(StateEvent $event): SimpleState
     {
         throw new DomainException(get_class($this) . ' does not support default entry');
     }
 
-    protected abstract function handleInternal(Event $event): bool;
+    protected abstract function handleInternal(StateEvent $event): bool;
 
-    protected abstract function handle(Event $event): ?SimpleState;
+    protected abstract function handle(StateEvent $event): ?SimpleState;
 
-    protected function transitionToState(Event $event, string $to, string $via = null): SimpleState
+    protected function transitionToState(StateEvent $event, string $to, string $via = null): SimpleState
     {
         return (new Transition($this, $to, $via))->execute($event);
     }
 
-    protected function dispatchInternal(Event $event): bool
+    protected function dispatchInternal(StateEvent $event): bool
     {
         return $this->handleInternal($event);
     }
 
-    protected function dispatchLocal(Event $event): SimpleState
+    protected function dispatchLocal(StateEvent $event): SimpleState
     {
         return tap($this->handle($event), function ($state) use ($event) {
             if (!$state) {

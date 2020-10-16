@@ -2,7 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
-use Bjuppa\EloquentStateMachine\Event;
+use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use DomainException;
 use Illuminate\Database\Eloquent\Model;
@@ -36,19 +36,19 @@ abstract class SubState extends State
         $this->superState = $this->make(static::$superStateClass);
     }
 
-    public abstract function exit(Event $event): void;
+    public abstract function exit(StateEvent $event): void;
 
-    protected function dispatchInternal(Event $event): bool
+    protected function dispatchInternal(StateEvent $event): bool
     {
         return parent::dispatchInternal($event) ?: $this->superState->dispatchInternal($event);
     }
 
-    protected function dispatchLocal(Event $event): SimpleState
+    protected function dispatchLocal(StateEvent $event): SimpleState
     {
         return $this->handle($event) ?: $this->dispatchExternal($event);
     }
 
-    private function dispatchExternal(Event $event): SimpleState
+    private function dispatchExternal(StateEvent $event): SimpleState
     {
         $this->exit($event);
         return $this->superState->dispatchLocal($event);
