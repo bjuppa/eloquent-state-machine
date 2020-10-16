@@ -13,6 +13,6 @@ class InvalidTransitionException extends DomainException
     {
         $this->transition = $transition;
 
-        parent::__construct("Could not transition to desired state.");
+        parent::__construct("Could not find path between source and target states");
     }
 }
