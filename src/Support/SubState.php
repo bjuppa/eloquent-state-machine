@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class SubState extends State
 {
+    /**
+     * Classname of the parent superstate this substate belongs to.
+     */
     public static string $superStateClass;
 
     protected State $superState;
@@ -36,6 +39,14 @@ abstract class SubState extends State
         $this->superState = $this->make(static::$superStateClass);
     }
 
+    /**
+     * Actions to process when exiting this state.
+     *
+     * Manipulate $this->model in here.
+     * Put any side effects into the event object for processing after the transition is completed.
+     *
+     * @throws \Throwable
+     */
     public abstract function exit(StateEvent $event): void;
 
     protected function dispatchInternal(StateEvent $event): bool

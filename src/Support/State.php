@@ -18,6 +18,14 @@ abstract class State
         $this->model = $model;
     }
 
+    /**
+     * Actions to process when entering this state from the outside.
+     *
+     * Manipulate $this->model in here.
+     * Put any side effects into the event object for processing after the transition is completed.
+     *
+     * @throws \Throwable
+     */
     public abstract function entry(StateEvent $event): void;
 
     public function defaultEntry(StateEvent $event): SimpleState
@@ -25,8 +33,27 @@ abstract class State
         throw new DomainException(get_class($this) . ' does not support default entry');
     }
 
+    /**
+     * Handle event without transitioning into another state.
+     *
+     * Evaluate guard conditions and manipulate $this->model in here.
+     * Put any side effects into the event object for processing after the transition is completed.
+     *
+     * Return true if event has been handled to stop it from propagating.
+     *
+     * @throws \Throwable
+     */
     protected abstract function handleInternal(StateEvent $event): bool;
 
+    /**
+     * Handle event and transition into another state.
+     *
+     * Evaluate guard conditions and return next state using $this->transitionToState() in here.
+     *
+     * Returning a new state will stop the event from propagating.
+     *
+     * @throws \Throwable
+     */
     protected abstract function handle(StateEvent $event): ?SimpleState;
 
     protected function transitionToState(StateEvent $event, string $to, string $via = null): SimpleState
