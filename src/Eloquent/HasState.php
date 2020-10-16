@@ -18,15 +18,42 @@ trait HasState
 {
     use CanLockPessimistically;
 
+    /**
+     * Classname of the root state for the state machine of this model.
+     */
     protected string $rootStateClass;
 
+    /**
+     * Conditions determining the state this model is currently in.
+     *
+     * Call $this->makeState() passing the classname of the current state and return it.
+     *
+     * @throws \Throwable
+     */
     abstract public function getState(): SimpleState;
 
+    /**
+     * Override this to swap out the default event passed to the root state when models are created.
+     *
+     * @see Bjuppa\EloquentStateMachine\ModelCreatedStateEvent
+     */
     protected function initialTransitionEvent(): ModelCreatedStateEvent
     {
         return new ModelCreatedStateEvent($this);
     }
 
+    /**
+     * This is the primary interaction point with the state machine.
+     *
+     * Instantiate an event class representing whatever happened in the outside world
+     * and pass it in for processing by the state machine.
+     *
+     * This model will be refreshed from storage and manipulated by the state machine within a transaction.
+     *
+     * @return SimpleState The committed state the model is in after any transitions.
+     *
+     * @throws \Throwable
+     */
     public function dispatchToState(StateEvent $event): SimpleState
     {
         try {
@@ -121,7 +148,7 @@ trait HasState
     }
 
     /**
-     * Avoid double transactions
+     * Avoid double transactions.
      * @see \Illuminate\Database\Eloquent\Model::saveOrFail
      *
      * @param  array  $options
