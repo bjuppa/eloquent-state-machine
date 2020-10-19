@@ -14,4 +14,16 @@ use Bjuppa\EloquentStateMachine\Support\HasDefaultSubState;
 abstract class RootState extends State
 {
     use HasDefaultSubState;
+
+    protected function handleInternal(StateEvent $event): bool
+    {
+        //
+        return false;
+    }
+
+    protected function handle(StateEvent $event): ?SimpleState
+    {
+        //
+        return null;
+    }
 }
