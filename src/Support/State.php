@@ -21,16 +21,6 @@ abstract class State
         $this->model = $model;
     }
 
-    /**
-     * Actions to process when entering this state from the outside.
-     *
-     * Manipulate $this->model in here.
-     * Put any side effects into the event object for processing after the transition is completed.
-     *
-     * @throws \Throwable
-     */
-    public abstract function entry(StateEvent $event): void;
-
     public function defaultEntry(StateEvent $event): SimpleState
     {
         throw new LogicException(get_class($this) . ' does not support default entry');

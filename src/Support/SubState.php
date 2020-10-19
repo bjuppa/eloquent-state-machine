@@ -50,6 +50,16 @@ abstract class SubState extends State
     }
 
     /**
+     * Actions to process when entering this state from the outside.
+     *
+     * Manipulate $this->model in here.
+     * Put any side effects into the event object for processing after the transition is completed.
+     *
+     * @throws \Throwable
+     */
+    public abstract function entry(StateEvent $event): void;
+
+    /**
      * Actions to process when exiting this state.
      *
      * Manipulate $this->model in here.
