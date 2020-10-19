@@ -60,20 +60,6 @@ abstract class State
         return (new Transition($this, $to, $via))->execute($event);
     }
 
-    protected function dispatchInternal(StateEvent $event): bool
-    {
-        return $this->handleInternal($event);
-    }
-
-    protected function dispatchLocal(StateEvent $event): SimpleState
-    {
-        return tap($this->handle($event), function ($state) use ($event) {
-            if (!$state) {
-                throw new UnhandledEventException($event);
-            }
-        });
-    }
-
     public function is(State $state): bool
     {
         return get_class($this) === get_class($state) && $this->model->is($state->model);
@@ -93,5 +79,19 @@ abstract class State
         }
 
         return new $state($this->model);
+    }
+
+    protected function dispatchInternal(StateEvent $event): bool
+    {
+        return $this->handleInternal($event);
+    }
+
+    protected function dispatchLocal(StateEvent $event): SimpleState
+    {
+        return tap($this->handle($event), function ($state) use ($event) {
+            if (!$state) {
+                throw new UnhandledEventException($event);
+            }
+        });
     }
 }
