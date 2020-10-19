@@ -9,7 +9,6 @@ use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use DomainException;
-use Illuminate\Database\Connection;
 use InvalidArgumentException;
 use LogicException;
 use Throwable;
@@ -202,6 +201,8 @@ trait HasState
 
     /**
      * @see \Illuminate\Database\Eloquent\Model::getConnection
+     *
+     * @return \Illuminate\Database\Connection
      */
-    abstract public function getConnection(): Connection;
+    abstract public function getConnection();
 }
