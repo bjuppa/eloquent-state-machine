@@ -3,9 +3,9 @@
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
-use DomainException;
+use LogicException;
 
-class UnexpectedStateException extends DomainException
+class UnexpectedStateException extends LogicException
 {
     public string $expected;
     public string $actual;

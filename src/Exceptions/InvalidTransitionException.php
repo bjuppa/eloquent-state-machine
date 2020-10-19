@@ -3,9 +3,9 @@
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
 use Bjuppa\EloquentStateMachine\Support\Transition;
-use DomainException;
+use LogicException;
 
-class InvalidTransitionException extends DomainException
+class InvalidTransitionException extends LogicException
 {
     public Transition $transition;
 

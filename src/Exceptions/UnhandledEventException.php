@@ -3,9 +3,9 @@
 namespace Bjuppa\EloquentStateMachine\Exceptions;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
-use DomainException;
+use LogicException;
 
-class UnhandledEventException extends DomainException
+class UnhandledEventException extends LogicException
 {
     public StateEvent $event;
 
