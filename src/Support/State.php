@@ -49,6 +49,12 @@ abstract class State
      */
     protected abstract function handle(StateEvent $event): ?SimpleState;
 
+    /**
+     * Transition from the current state to another state.
+     *
+     * @param $to Classname of the state to transition to.
+     * @param $via Optional classname of a common higher superstate to exit up to before entering again.
+     */
     protected function transitionToState(StateEvent $event, string $to, string $via = null): SimpleState
     {
         return (new Transition($this, $to, $via))->execute($event);
