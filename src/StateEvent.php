@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class StateEvent extends Event
 {
     /**
-     * Constructor may receive and store any additional payload data needed during event handling.
+     * Subclass' constructor may receive and store any additional payload data needed during event handling.
      */
     public function __construct(Model $model)
     {

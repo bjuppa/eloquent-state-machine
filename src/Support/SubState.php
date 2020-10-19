@@ -11,9 +11,19 @@ abstract class SubState extends State
 {
     /**
      * Classname of the parent superstate this substate belongs to.
+     *
+     * Always set this in your substate class.
+     *
+     * Can be either
+     * @see \Bjuppa\EloquentStateMachine\RootState
+     * or
+     * @see \Bjuppa\EloquentStateMachine\CompositeState
      */
     public static string $superStateClass;
 
+    /**
+     * Parent superstate instance.
+     */
     protected State $superState;
 
     public function __construct(Model $model)

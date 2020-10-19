@@ -20,22 +20,37 @@ trait HasState
 
     /**
      * Classname of the root state for the state machine of this model.
+     * Used to initialize the state machine upon model creation.
+     *
+     * Always set this in your model class.
+     *
+     * Your root state class should extend
+     * @see \Bjuppa\EloquentStateMachine\RootState
      */
     protected string $rootStateClass;
 
     /**
-     * Conditions determining the state this model is currently in.
+     * Logic determining the state this model is currently in.
      *
-     * Call $this->makeState() passing the classname of the current state and return it.
+     * Always implement this in your model class.
+     *
+     * Current state may be stored directly in a database column, but you are free to use
+     * any logic involving the attributes and relationships of the current model.
+     *
+     * After determining the current state, call $this->makeState()
+     * passing the desired classname and return it.
      *
      * @throws \Throwable
      */
     abstract public function getState(): SimpleState;
 
     /**
-     * Override this to swap out the default event passed to the root state when models are created.
+     * Instantiate an event for the initial transition when models are created.
      *
-     * @see Bjuppa\EloquentStateMachine\ModelCreatedStateEvent
+     * Create your own event class extending ModelCreatedStateEvent and override this method if you need a custom
+     * payload when initializing the state machine for freshly created model instances.
+     *
+     * @see \Bjuppa\EloquentStateMachine\ModelCreatedStateEvent
      */
     protected function initialTransitionEvent(): ModelCreatedStateEvent
     {
@@ -43,27 +58,30 @@ trait HasState
     }
 
     /**
-     * This is the primary interaction point with the state machine.
+     * Dispatch an event to the state machine.
+     * This is your primary interaction point with the model's state machine.
      *
      * Instantiate an event class representing whatever happened in the outside world
-     * and pass it in for processing by the state machine.
+     * and pass it to this method for processing by the state machine.
      *
-     * This model will be refreshed from storage and manipulated by the state machine within a transaction.
+     * This model will be refreshed from storage and then manipulated by the state machine within a transaction.
      *
-     * @return SimpleState The committed state the model is in after any transitions.
+     * @return SimpleState The committed and verified state the model is in after any transitions.
      *
-     * @throws \Throwable
+     * @throws \Throwable If any part of the state machine throws an exception when handling the event,
+     * the transaction will be aborted, the model will be reset to the state it was before,
+     * and the exception will be re-thrown for you to handle.
      */
     public function dispatchToState(StateEvent $event): SimpleState
     {
         if ($this->isDirty()) {
-            throw new LogicException('Model should not be dirty when dispatching event to state');
+            throw new LogicException('Model must not be dirty when dispatching event to state');
         }
+
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
                 return tap(
                     $this->getState()->dispatch($event),
-                    // Validate the new state and process side effects before committing the transaction
                     function (State $destination) use ($event) {
                         $this->assertStateAfterEvent($destination, $event);
                         $event->processSideEffects();
@@ -71,12 +89,14 @@ trait HasState
                 );
             });
         } catch (Throwable $e) {
-            // If transaction was aborted, make sure this model matches the database
             $this->refresh();
             throw $e;
         }
     }
 
+    /**
+     * Generate a state object bound to this model.
+     */
     protected function makeState(string $classname): State
     {
         if (!is_a($classname, State::class)) {
@@ -87,6 +107,17 @@ trait HasState
         return new $classname($this);
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     * Methods below are for internal use.
+     * -------------------------------------------------------------------------
+     */
+
+    /**
+     * Get the root state object for this model.
+     *
+     * @throws DomainException
+     */
     protected function rootState(): RootState
     {
         if (!is_a($this->rootStateClass, RootState::class)) {
@@ -97,6 +128,11 @@ trait HasState
         return $this->makeState($this->rootStateClass);
     }
 
+    /**
+     * Perform the initial transition to the state machine's default state.
+     *
+     * @throws \Throwable
+     */
     protected function initialTransition(): void
     {
         $event = $this->initialTransitionEvent();
@@ -154,6 +190,9 @@ trait HasState
         return $this->save();
     }
 
+    /**
+     * Boot the trait.
+     */
     protected static function bootHasState()
     {
         static::created(function ($model) {
@@ -161,5 +200,8 @@ trait HasState
         });
     }
 
+    /**
+     * @see \Illuminate\Database\Eloquent\Model::getConnection
+     */
     abstract public function getConnection(): Connection;
 }

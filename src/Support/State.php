@@ -11,6 +11,9 @@ use InvalidArgumentException;
 
 abstract class State
 {
+    /**
+     * Model instance representing the extended state.
+     */
     protected Model $model;
 
     public function __construct(Model $model)

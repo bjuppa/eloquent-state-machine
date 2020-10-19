@@ -10,13 +10,24 @@ trait HasDefaultSubState
 {
     /**
      * Classname of the substate to transition to if entering this composite state without a specific target substate.
+     *
+     * Needed only when there is some transition ending in this composite state.
+     *
+     * Can be either
+     * @see \Bjuppa\EloquentStateMachine\SimpleState
+     * or
+     * @see \Bjuppa\EloquentStateMachine\CompositeState
      */
     public static string $defaultStateClass;
 
     /**
-     * Override to run custom logic if entering this composite state without a specific target substate.
+     * Perform default entry into this composite state.
+     *
+     * Override to run custom logic when entering this composite state without a specific target substate.
      *
      * Call $this->transitionToState() to transition into a substate and return the target state.
+     *
+     * @return SimpleState The target state, a substate of this composite state
      *
      * @throws \Throwable
      */
