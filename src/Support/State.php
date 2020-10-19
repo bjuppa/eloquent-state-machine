@@ -27,7 +27,7 @@ abstract class State
     }
 
     /**
-     * Handle event without transitioning into another state.
+     * Handle event while staying in the current simple state.
      *
      * Evaluate guard conditions and manipulate $this->model in here.
      * Put any side effects into the event object for processing after the transition is completed.
