@@ -11,6 +11,7 @@ use Bjuppa\EloquentStateMachine\Support\State;
 use DomainException;
 use Illuminate\Database\Connection;
 use InvalidArgumentException;
+use LogicException;
 use Throwable;
 
 trait HasState
@@ -55,6 +56,9 @@ trait HasState
      */
     public function dispatchToState(StateEvent $event): SimpleState
     {
+        if ($this->isDirty()) {
+            throw new LogicException('Model should not be dirty when dispatching event to state');
+        }
         try {
             return $this->transactionWithRefreshForUpdate(function () use ($event) {
                 return tap(
