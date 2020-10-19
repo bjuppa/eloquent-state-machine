@@ -28,13 +28,17 @@ abstract class Event
         array_push($this->sideEffects, $callback);
     }
 
-    public function getActions(): array
+    public function processActions(): void
     {
-        return tap($this->actions, fn () => $this->actions = []);
+        while (count($this->actions)) {
+            array_shift($this->actions)();
+        }
     }
 
-    public function getSideEffects(): array
+    public function processSideEffects(): void
     {
-        return tap($this->sideEffects, fn () => $this->sideEffects = []);
+        while (count($this->sideEffects)) {
+            array_shift($this->sideEffects)();
+        }
     }
 }

@@ -57,21 +57,16 @@ trait HasState
     public function dispatchToState(StateEvent $event): SimpleState
     {
         try {
-            return tap(
-                $this->transactionWithRefreshForUpdate(function () use ($event) {
-                    return tap(
-                        $this->getState()->dispatch($event),
-                        // Validate the new state before committing the transaction
-                        function (State $destination) use ($event) {
-                            $this->assertStateAfterEvent($destination, $event);
-                        }
-                    );
-                }),
-                // Process side effects after committing the transaction
-                function () use ($event) {
-                    $this->processEventSideEffects($event);
-                }
-            );
+            return $this->transactionWithRefreshForUpdate(function () use ($event) {
+                return tap(
+                    $this->getState()->dispatch($event),
+                    // Validate the new state and process side effects before committing the transaction
+                    function (State $destination) use ($event) {
+                        $this->assertStateAfterEvent($destination, $event);
+                        $event->processSideEffects();
+                    }
+                );
+            });
         } catch (Exception $e) {
             // If transaction was aborted, make sure this model matches the database
             $this->refresh();
@@ -104,7 +99,7 @@ trait HasState
         $event = $this->initialTransitionEvent();
         $destination = $this->rootState()->defaultEntry($event);
         $this->assertStateAfterEvent($destination, $event);
-        $this->processEventSideEffects($event);
+        $event->processSideEffects();
     }
 
     /**
@@ -123,11 +118,6 @@ trait HasState
                 $event
             );
         }
-    }
-
-    protected function processEventSideEffects(StateEvent $event)
-    {
-        collect($event->getSideEffects())->each(fn (Closure $callback) => $callback());
     }
 
     /**

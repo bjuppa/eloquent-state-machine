@@ -37,7 +37,7 @@ class Transition
     {
         collect($this->exit)->each(fn (SubState $state) => $state->exit($event));
 
-        collect($event->getActions())->each(fn (Closure $callback) => $callback());
+        $event->processActions();
 
         /* @var $destination State */
         $destination = collect($this->enter)->each(fn (SubState $state) => $state->entry($event))->last();
