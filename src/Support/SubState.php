@@ -30,17 +30,17 @@ abstract class SubState extends State
     {
         parent::__construct($model);
 
-        if (!static::$superStateClass) {
+        if (!isset(static::$superStateClass)) {
             throw new DomainException(get_class($this) . '::$superStateClass must be specified');
         }
 
-        if (!is_a($this->superState, State::class)) {
+        if (!is_a(static::$superStateClass, State::class)) {
             throw new DomainException(
                 get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must be a ' . State::class
             );
         }
 
-        if (is_a($this->superState, SimpleState::class)) {
+        if (is_a(static::$superStateClass, SimpleState::class)) {
             throw new DomainException(
                 get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
             );

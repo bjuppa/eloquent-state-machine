@@ -119,9 +119,12 @@ trait HasState
      */
     protected function rootState(): RootState
     {
+        if (!isset($this->rootStateClass)) {
+            throw new DomainException(get_class($this) . '::$rootStateClass must be specified');
+        }
         if (!is_a($this->rootStateClass, RootState::class)) {
             throw new DomainException(
-                get_class($this) . '::rootStateClass ' . $this->rootStateClass . ' is not a ' . RootState::class
+                get_class($this) . '::$rootStateClass ' . $this->rootStateClass . ' is not a ' . RootState::class
             );
         }
         return $this->makeState($this->rootStateClass);
