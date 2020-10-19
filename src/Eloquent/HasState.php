@@ -8,11 +8,10 @@ use Bjuppa\EloquentStateMachine\ModelCreatedStateEvent;
 use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
-use Closure;
 use DomainException;
-use Exception;
 use Illuminate\Database\Connection;
 use InvalidArgumentException;
+use Throwable;
 
 trait HasState
 {
@@ -67,7 +66,7 @@ trait HasState
                     }
                 );
             });
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             // If transaction was aborted, make sure this model matches the database
             $this->refresh();
             throw $e;
