@@ -113,4 +113,11 @@ trait CanLockPessimistically
             }
         });
     }
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Model::getConnection
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    abstract public function getConnection();
 }
