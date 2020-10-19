@@ -7,7 +7,7 @@ use Closure;
 trait CanLockPessimistically
 {
     /**
-     * Indicates whether row locking is being used.
+     * Indicates whether row locking is currently enabled on select statements on the model.
      *
      * true: update lock
      * false: shared lock
@@ -15,7 +15,7 @@ trait CanLockPessimistically
      *
      * @var bool
      */
-    protected static $lockPessimistically;
+    protected static $lockPessimistically = null;
 
     /**
      * Execute a Closure within a transaction, after refreshing the model and
