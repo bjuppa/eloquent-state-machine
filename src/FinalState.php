@@ -2,6 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine;
 
+use Illuminate\Database\Eloquent\Model;
 use LogicException;
 
 /**
@@ -9,6 +10,15 @@ use LogicException;
  */
 class FinalState extends SimpleState
 {
+    public function __construct(Model $model)
+    {
+        if (isset(static::$superStateClass)) {
+            parent::__construct($model);
+        } else {
+            $this->model = $model;
+        }
+    }
+
     final public function dispatch(StateEvent $event): SimpleState
     {
         throw new LogicException(get_class($this) . ' is a final state and can not handle events');
