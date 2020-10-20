@@ -11,7 +11,7 @@ class Transition
 {
     public string $from;
     public string $to;
-    public string $via;
+    public ?string $via;
 
     protected State $source;
 
