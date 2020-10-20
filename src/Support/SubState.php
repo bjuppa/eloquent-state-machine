@@ -34,13 +34,13 @@ abstract class SubState extends State
             throw new DomainException(get_class($this) . '::$superStateClass must be specified');
         }
 
-        if (!is_a(static::$superStateClass, State::class)) {
+        if (!is_a(static::$superStateClass, State::class, true)) {
             throw new DomainException(
                 get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must be a ' . State::class
             );
         }
 
-        if (is_a(static::$superStateClass, SimpleState::class)) {
+        if (is_a(static::$superStateClass, SimpleState::class, true)) {
             throw new DomainException(
                 get_class($this) . '::$superStateClass (' . static::$superStateClass . ') must not be a ' . SimpleState::class
             );

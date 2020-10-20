@@ -72,7 +72,7 @@ abstract class State
 
     public function make(string $state): State
     {
-        if (!is_a($state, State::class)) {
+        if (!is_a($state, State::class, true)) {
             throw new InvalidArgumentException(
                 $state . ' is not a ' . State::class
             );

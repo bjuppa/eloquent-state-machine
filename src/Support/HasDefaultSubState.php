@@ -36,7 +36,7 @@ trait HasDefaultSubState
         if (!isset(static::$defaultStateClass)) {
             throw new DomainException(get_class($this) . '::$defaultStateClass must be specified to handle default entry into the composite state');
         }
-        if (!is_a(static::$defaultStateClass, State::class)) {
+        if (!is_a(static::$defaultStateClass, State::class, true)) {
             throw new DomainException(
                 get_class($this) . '::$defaultStateClass (' . static::$defaultStateClass . ') must be a ' . State::class
             );

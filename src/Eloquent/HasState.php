@@ -98,7 +98,7 @@ trait HasState
      */
     protected function makeState(string $classname): State
     {
-        if (!is_a($classname, State::class)) {
+        if (!is_a($classname, State::class, true)) {
             throw new InvalidArgumentException(
                 $classname . ' is not a ' . State::class
             );
@@ -122,7 +122,7 @@ trait HasState
         if (!isset($this->rootStateClass)) {
             throw new DomainException(get_class($this) . '::$rootStateClass must be specified');
         }
-        if (!is_a($this->rootStateClass, RootState::class)) {
+        if (!is_a($this->rootStateClass, RootState::class, true)) {
             throw new DomainException(
                 get_class($this) . '::$rootStateClass ' . $this->rootStateClass . ' is not a ' . RootState::class
             );
