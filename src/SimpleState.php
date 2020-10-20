@@ -11,4 +11,28 @@ use Bjuppa\EloquentStateMachine\Support\SubState;
 abstract class SimpleState extends SubState
 {
     use CanBeActiveState;
+
+    public static string $superStateClass;
+
+    protected function handleInternal(StateEvent $event): bool
+    {
+        //
+        return false;
+    }
+
+    protected function handle(StateEvent $event): ?SimpleState
+    {
+        //
+        return null;
+    }
+
+    public function entry(StateEvent $event): void
+    {
+        //
+    }
+
+    public function exit(StateEvent $event): void
+    {
+        //
+    }
 }

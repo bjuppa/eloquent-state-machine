@@ -15,6 +15,8 @@ abstract class RootState extends State
 {
     use HasDefaultSubState;
 
+    public static string $defaultStateClass;
+
     protected function handleInternal(StateEvent $event): bool
     {
         //
