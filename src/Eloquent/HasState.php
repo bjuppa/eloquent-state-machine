@@ -131,11 +131,11 @@ trait HasState
     }
 
     /**
-     * Perform the initial transition to the state machine's default state.
+     * Transition the state machine into its default state.
      *
      * @throws \Throwable
      */
-    protected function initialTransition(): void
+    protected function performInitialTransition(): void
     {
         $event = $this->initialTransitionEvent();
         $destination = $this->rootState()->defaultEntry($event);
@@ -198,7 +198,7 @@ trait HasState
     protected static function bootHasState()
     {
         static::created(function ($model) {
-            $model->initialTransition();
+            $model->performInitialTransition();
         });
     }
 
