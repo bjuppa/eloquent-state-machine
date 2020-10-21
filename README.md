@@ -19,7 +19,7 @@ The current state handles incoming events and *transitions* the model into anoth
 - A state declares the *superstate* (*composite* or *root*) it belongs too.
 - Events are dispatched through the model to the current state.
 - Event handling happens within database transactions with pessimistic row-locks.
-- The current state evaluates an incoming event(*guards*) and may initiate a *transition* to another (named) state.
+- The current state evaluates an incoming event (*guards*) and may initiate a *transition* to another (named) state.
 - Events not explicitly handled by the current state will bubble up the state branch.
 - States have *entry* and *exit* actions and events have *actions* that manipulate the model during a *transition*.
 - Side effects can be deferred for processing after the transition is completed.
