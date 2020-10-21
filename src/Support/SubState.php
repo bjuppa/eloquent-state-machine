@@ -69,6 +69,16 @@ abstract class SubState extends State
      */
     public abstract function exit(StateEvent $event): void;
 
+    /**
+     * Do a recursive transition, exiting the current state and entering it again.
+     *
+     * Also called self-transition.
+     */
+    protected function transitionToSelf(StateEvent $event): SimpleState
+    {
+        return $this->transitionToState($event, get_class($this), static::$superStateClass);
+    }
+
     protected function dispatchInternal(StateEvent $event): bool
     {
         return parent::dispatchInternal($event) ?: $this->superState->dispatchInternal($event);
