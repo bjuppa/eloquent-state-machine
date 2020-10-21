@@ -18,6 +18,16 @@ class UnexpectedStateException extends LogicException
         $this->actual = is_string($actual) ? $actual : get_class($actual);
         $this->event = $event;
 
-        parent::__construct("Model is not in expected state.");
+        $message = implode(' ', array_filter([
+            isset($this->event->model)
+                ? get_class($this->event->model) . ' [' . $this->event->model->getKey() . ']'
+                : 'Model',
+            'is in state',
+            $this->actual,
+            'instead of expected state',
+            $this->expected,
+        ]));
+
+        parent::__construct($message);
     }
 }
