@@ -24,7 +24,7 @@ class UnexpectedStateException extends LogicException
                 : 'Model',
             'is in state',
             $this->actual,
-            'instead of expected state',
+            'and not expected state',
             $this->expected,
         ]));
 

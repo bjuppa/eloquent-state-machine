@@ -4,6 +4,7 @@ namespace Bjuppa\EloquentStateMachine\Eloquent;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
+use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\ModelCreatedStateEvent;
 use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
@@ -95,7 +96,7 @@ trait HasState
     public function dispatchToStateOrFail(StateEvent $event): SimpleState
     {
         if ($this->isDirty()) {
-            throw new LogicException('Model must not be dirty when dispatching event to state');
+            throw new LogicException(get_class($this) . ' [' . $this->getKey() . '] must not be dirty when dispatching event to state');
         }
 
         try {

@@ -13,7 +13,7 @@ class UnhandledEventException extends LogicException
     {
         $this->event = $event;
 
-        $message = 'Event ' . get_class($this->event) . ' could not be handled by state';
+        $message = 'Event ' . get_class($this->event) . ' could not be handled in state';
 
         if (isset($this->event->dispatchedTo)) {
             $message = implode(' ', [$message, get_class($this->event->dispatchedTo)]);
