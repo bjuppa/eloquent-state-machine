@@ -9,6 +9,8 @@ trait CanBeActiveState
 {
     public function dispatch(StateEvent $event): SimpleState
     {
+        $event->dispatchedTo = $this;
+
         if ($this->dispatchInternal($event)) {
             return $this;
         }

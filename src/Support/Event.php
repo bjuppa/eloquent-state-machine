@@ -2,6 +2,7 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
+use Bjuppa\EloquentStateMachine\SimpleState;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,8 @@ abstract class Event
 
     private array $actions = [];
     private array $sideEffects = [];
+
+    public SimpleState $dispatchedTo;
 
     public function __construct(Model $model)
     {
