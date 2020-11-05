@@ -18,6 +18,7 @@ trait HasDefaultSubState
      * or
      * @see \Bjuppa\EloquentStateMachine\CompositeState
      */
+    //TODO: create an overridable method returning the defaultstateclass (taking an event)
     public static string $defaultStateClass;
 
     /**
