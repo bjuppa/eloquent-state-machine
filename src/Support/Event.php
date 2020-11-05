@@ -79,6 +79,7 @@ abstract class Event
                 return tap(
                     $this->model->getState()->dispatch($this),
                     function (State $destination) {
+                        $this->processActions();
                         $this->assertCurrentState($destination);
                         $this->processSideEffects();
                     }

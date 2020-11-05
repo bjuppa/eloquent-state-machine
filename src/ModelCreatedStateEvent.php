@@ -30,6 +30,7 @@ abstract class ModelCreatedStateEvent extends StateEvent
         return tap(
             $this->rootState()->defaultEntry($this),
             function ($state) {
+                $this->processActions();
                 $this->assertCurrentState($state);
                 $this->processSideEffects();
             }
