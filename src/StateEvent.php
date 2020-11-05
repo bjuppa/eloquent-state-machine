@@ -48,9 +48,9 @@ abstract class StateEvent extends Event
      *
      * @throws \Throwable Except \Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException
      */
-    public static function dispatch(...$constructorArguments): ?SimpleState
+    public static function dispatch(...$construct): ?SimpleState
     {
-        return static::make(...$constructorArguments)->dispatchToState();
+        return static::make(...$construct)->dispatchToState();
     }
 
     /**
@@ -64,8 +64,8 @@ abstract class StateEvent extends Event
      * the transaction will be aborted, the model will be reset to the state it was before,
      * and the exception will be re-thrown for you to handle.
      */
-    public static function dispatchOrFail(...$constructorArguments): SimpleState
+    public static function dispatchOrFail(...$construct): SimpleState
     {
-        return static::make(...$constructorArguments)->dispatchToStateOrFail();
+        return static::make(...$construct)->dispatchToStateOrFail();
     }
 }

@@ -28,9 +28,9 @@ abstract class Event
         }];
     }
 
-    public static function make(...$constructorArguments): Event
+    public static function make(...$construct): Event
     {
-        return new static(...$constructorArguments);
+        return new static(...$construct);
     }
 
     abstract protected function actions(): void;
