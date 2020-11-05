@@ -9,7 +9,5 @@ abstract class StateMachineModel extends Model
 {
     use HasState;
 
-    protected string $rootStateClass;
-
     abstract public function getState(): SimpleState;
 }
