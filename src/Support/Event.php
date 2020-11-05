@@ -66,7 +66,12 @@ abstract class Event
     public function dispatchToStateOrFail(): SimpleState
     {
         if ($this->model->isDirty()) {
-            throw new LogicException(get_class($this->model) . ' [' . $this->model->getKey() . '] must not be dirty when dispatching event to state');
+            throw new LogicException(
+                get_class($this->model) . ' [' . $this->model->getKey() . ']'
+                    . ' must not be dirty when dispatching '
+                    . get_class($this)
+                    . ' to state'
+            );
         }
 
         try {
