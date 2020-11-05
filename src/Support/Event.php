@@ -76,19 +76,21 @@ abstract class Event
 
         try {
             return $this->model->transactionWithRefreshForUpdate(function () {
-                return tap(
-                    $this->model->getState()->dispatch($this),
-                    function (State $destination) {
-                        $this->processActions();
-                        $this->assertCurrentState($destination);
-                        $this->processSideEffects();
-                    }
-                );
+                return $this->consummate($this->model->getState()->dispatch($this));
             });
         } catch (Throwable $e) {
             $this->model->refresh();
             throw $e;
         }
+    }
+
+    protected function consummate(State $state): State
+    {
+        $this->processActions();
+        $this->assertCurrentState($state);
+        $this->processSideEffects();
+
+        return $state;
     }
 
     public function assertCurrentState(State $state): void

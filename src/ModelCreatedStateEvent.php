@@ -27,14 +27,7 @@ abstract class ModelCreatedStateEvent extends StateEvent
         if (!$this->model->wasRecentlyCreated) {
             throw new LogicException(get_class($this) . ' must be dispatched for a newly created model');
         }
-        return tap(
-            $this->rootState()->defaultEntry($this),
-            function ($state) {
-                $this->processActions();
-                $this->assertCurrentState($state);
-                $this->processSideEffects();
-            }
-        );
+        return $this->consummate($this->rootState()->defaultEntry($this));
     }
 
     protected function rootState(): RootState
