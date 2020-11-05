@@ -74,7 +74,7 @@ abstract class Event
                 return tap(
                     $this->model->getState()->dispatch($this),
                     function (State $destination) {
-                        $this->assertStateAfterEvent($destination);
+                        $this->assertCurrentState($destination);
                         $this->processSideEffects();
                     }
                 );
@@ -85,8 +85,7 @@ abstract class Event
         }
     }
 
-    //TODO: rename to assertCurrentState
-    public function assertStateAfterEvent(State $state): void
+    public function assertCurrentState(State $state): void
     {
         $this->model->refresh();
         if (!$state->is($this->model->getState())) {
