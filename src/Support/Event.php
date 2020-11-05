@@ -12,6 +12,9 @@ use Throwable;
 
 abstract class Event
 {
+    /**
+     * @var \Illuminate\Database\Eloquent\Model
+     */
     protected Model $model;
 
     private array $actions = [];
