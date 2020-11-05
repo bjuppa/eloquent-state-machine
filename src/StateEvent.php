@@ -3,7 +3,7 @@
 namespace Bjuppa\EloquentStateMachine;
 
 use Bjuppa\EloquentStateMachine\Support\Event;
-use Illuminate\Database\Eloquent\Model;
+use Bjuppa\EloquentStateMachine\StateMachineModel as Model;
 
 /**
  * Extend this class to describe an event that the state machine should handle.
