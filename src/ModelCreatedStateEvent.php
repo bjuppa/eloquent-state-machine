@@ -25,7 +25,11 @@ abstract class ModelCreatedStateEvent extends StateEvent
     public function dispatchToStateOrFail(): SimpleState
     {
         if (!$this->model->wasRecentlyCreated) {
-            throw new LogicException(get_class($this) . ' must be dispatched for a newly created model');
+            throw new LogicException(
+                get_class($this->model) . ' [' . $this->model->getKey() . ']'
+                    . ' must be recently created when dispatching '
+                    . get_class($this)
+            );
         }
         return $this->consummate($this->rootState()->defaultEntry($this));
     }
