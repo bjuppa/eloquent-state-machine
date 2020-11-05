@@ -3,6 +3,7 @@
 namespace Bjuppa\EloquentStateMachine;
 
 use DomainException;
+use LogicException;
 
 /**
  * For transitioning new created models into an initial state, extend this class.
@@ -23,7 +24,9 @@ abstract class ModelCreatedStateEvent extends StateEvent
 
     public function dispatchToStateOrFail(): SimpleState
     {
-        //TODO: throw exception unless model is recently created
+        if (!$this->model->wasRecentlyCreated) {
+            throw new LogicException(get_class($this) . ' must be dispatched for a newly created model');
+        }
         return tap(
             //TODO: should this process event's actions before entering state?
             $this->rootState()->defaultEntry($this),
