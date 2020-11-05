@@ -2,9 +2,13 @@
 
 namespace Bjuppa\EloquentStateMachine\Support;
 
+use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
+use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
+use LogicException;
+use Throwable;
 
 abstract class Event
 {
@@ -22,6 +26,11 @@ abstract class Event
         $this->actions = [function () {
             $this->actions();
         }];
+    }
+
+    public static function make(...$constructorArguments): Event
+    {
+        return new static(...$constructorArguments);
     }
 
     abstract protected function actions(): void;
@@ -42,6 +51,50 @@ abstract class Event
     {
         while (count($this->sideEffects)) {
             array_shift($this->sideEffects)();
+        }
+    }
+
+    public function dispatchToState(): ?SimpleState
+    {
+        try {
+            return $this->dispatchToStateOrFail();
+        } catch (UnhandledEventException $e) {
+            return null;
+        }
+    }
+
+    public function dispatchToStateOrFail(): SimpleState
+    {
+        if ($this->model->isDirty()) {
+            throw new LogicException(get_class($this) . ' [' . $this->model->getKey() . '] must not be dirty when dispatching event to state');
+        }
+
+        try {
+            return $this->model->transactionWithRefreshForUpdate(function () {
+                return tap(
+                    $this->model->getState()->dispatch($this),
+                    function (State $destination) {
+                        $this->assertStateAfterEvent($destination);
+                        $this->processSideEffects();
+                    }
+                );
+            });
+        } catch (Throwable $e) {
+            $this->model->refresh();
+            throw $e;
+        }
+    }
+
+    //TODO: rename to assertCurrentState
+    public function assertStateAfterEvent(State $state): void
+    {
+        $this->model->refresh();
+        if (!$state->is($this->model->getState())) {
+            throw new UnexpectedStateException(
+                $state,
+                $this->model->getState(),
+                $this
+            );
         }
     }
 }

@@ -4,14 +4,12 @@ namespace Bjuppa\EloquentStateMachine\Eloquent;
 
 use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
-use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\ModelCreatedStateEvent;
 use Bjuppa\EloquentStateMachine\RootState;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Bjuppa\EloquentStateMachine\Support\State;
 use DomainException;
 use InvalidArgumentException;
-use LogicException;
 use Throwable;
 
 trait HasState
@@ -56,63 +54,6 @@ trait HasState
     protected function initialTransitionEvent(): ModelCreatedStateEvent
     {
         return new ModelCreatedStateEvent($this);
-    }
-
-    /**
-     * Dispatch an event to the state machine, and silence any UnhandledEventException.
-     *
-     * This is your primary interaction point with the model's state machine.
-     *
-     * Instantiate an event class representing whatever happened in the outside world
-     * and pass it to this method for processing by the state machine.
-     *
-     * This model will be refreshed from storage and then manipulated by the state machine within a transaction.
-     *
-     * @return SimpleState|null The committed and verified state of this model after any successful transition,
-     * or null if the event had no handler and thus the model was left unmodified.
-     *
-     * @throws \Throwable Except \Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException
-     */
-    public function dispatchToState(StateEvent $event): ?SimpleState
-    {
-        try {
-            return $this->dispatchToStateOrFail($event);
-        } catch (UnhandledEventException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Dispatch an event to the state machine.
-     *
-     * Use this method directly if you don't want to silence any exceptions.
-     *
-     * @return SimpleState The committed and verified state of this model after any transitions.
-     *
-     * @throws \Throwable If any part of the state machine throws an exception when handling the event,
-     * the transaction will be aborted, the model will be reset to the state it was before,
-     * and the exception will be re-thrown for you to handle.
-     */
-    public function dispatchToStateOrFail(StateEvent $event): SimpleState
-    {
-        if ($this->isDirty()) {
-            throw new LogicException(get_class($this) . ' [' . $this->getKey() . '] must not be dirty when dispatching event to state');
-        }
-
-        try {
-            return $this->transactionWithRefreshForUpdate(function () use ($event) {
-                return tap(
-                    $this->getState()->dispatch($event),
-                    function (State $destination) use ($event) {
-                        $this->assertStateAfterEvent($destination, $event);
-                        $event->processSideEffects();
-                    }
-                );
-            });
-        } catch (Throwable $e) {
-            $this->refresh();
-            throw $e;
-        }
     }
 
     /**
@@ -171,6 +112,7 @@ trait HasState
      *
      * @throws UnexpectedStateException
      */
+    //TODO: remove this assertStateAfterEvent
     public function assertStateAfterEvent(State $state, StateEvent $event): void
     {
         $this->refresh();
