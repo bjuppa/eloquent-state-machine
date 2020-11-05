@@ -6,7 +6,7 @@ use Bjuppa\EloquentStateMachine\Exceptions\UnexpectedStateException;
 use Bjuppa\EloquentStateMachine\Exceptions\UnhandledEventException;
 use Bjuppa\EloquentStateMachine\SimpleState;
 use Closure;
-use Illuminate\Database\Eloquent\Model;
+use Bjuppa\EloquentStateMachine\StateMachineModel as Model;
 use LogicException;
 use Throwable;
 

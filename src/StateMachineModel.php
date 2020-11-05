@@ -32,8 +32,28 @@ interface StateMachineModel
      */
     public function transactionWithRefreshForUpdate(Closure $callback);
 
-    // isDirty()
-    // refresh()
-    // getKey()
-    // is()
+    /**
+     * The methods below are already provided by the Eloquent Model
+     * @see \Illuminate\Database\Eloquent\Model
+     */
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Model::refresh
+     */
+    public function refresh();
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Model::getKey
+     */
+    public function getKey();
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Model::is
+     */
+    public function is($model);
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Concerns\HasAttributes::isDirty
+     */
+    public function isDirty($attributes = null);
 }
