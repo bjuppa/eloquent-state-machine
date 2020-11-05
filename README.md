@@ -17,7 +17,7 @@ The current state handles incoming events and *transitions* the model into anoth
 
 - Every state and event is represented by a PHP class, extending a relevant base class.
 - A state declares the *superstate* (*composite* or *root*) it belongs too.
-- Events are dispatched through the model to the current state.
+- Events are dispatched to the current state of the model.
 - Event handling happens within database transactions with pessimistic row-locks.
 - The current state evaluates an incoming event (*guards*) and may initiate a *transition* to another (named) state.
 - Events not explicitly handled by the current state will bubble up the state branch.
