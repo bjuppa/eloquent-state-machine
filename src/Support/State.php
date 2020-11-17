@@ -70,6 +70,17 @@ abstract class State
         return [$this];
     }
 
+    public function branchContains(string $state): bool
+    {
+        if (!is_a($state, State::class, true)) {
+            throw new InvalidArgumentException(
+                $state . ' is not a ' . State::class
+            );
+        }
+
+        return collect($this->branch())->contains(fn ($candidate) => $candidate instanceof $state);
+    }
+
     public function make(string $state): State
     {
         if (!is_a($state, State::class, true)) {
