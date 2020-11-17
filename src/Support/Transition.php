@@ -5,7 +5,6 @@ namespace Bjuppa\EloquentStateMachine\Support;
 use Bjuppa\EloquentStateMachine\StateEvent;
 use Bjuppa\EloquentStateMachine\Exceptions\InvalidTransitionException;
 use Bjuppa\EloquentStateMachine\SimpleState;
-use Closure;
 
 class Transition
 {
