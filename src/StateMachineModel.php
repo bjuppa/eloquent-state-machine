@@ -56,4 +56,9 @@ interface StateMachineModel
      * @see \Illuminate\Database\Eloquent\Concerns\HasAttributes::isDirty
      */
     public function isDirty($attributes = null);
+
+    /**
+     * @see \Illuminate\Database\Eloquent\Concerns\HasRelationships::unsetRelations
+     */
+    public function unsetRelations();
 }
