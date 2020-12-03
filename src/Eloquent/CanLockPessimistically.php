@@ -35,8 +35,8 @@ trait CanLockPessimistically
     }
 
     /**
-     * Reload the current model and set update lock on the database row for the
-     * current transaction.
+     * Reload the current model without any relations and set update lock
+     * on the database row for the current transaction.
      * @see \Illuminate\Database\Eloquent\Model::refresh()
      *
      * @return $this
@@ -45,6 +45,8 @@ trait CanLockPessimistically
      */
     public function refreshForUpdate()
     {
+        $this->unsetRelations();
+
         return $this->lockSelectedModelsForUpdate(function () {
             return $this->refresh();
         });

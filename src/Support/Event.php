@@ -82,6 +82,7 @@ abstract class Event
                 return $this->consummate($this->model->getState()->dispatch($this));
             });
         } catch (Throwable $e) {
+            $this->model->unsetRelations();
             $this->model->refresh();
             throw $e;
         }
@@ -98,6 +99,7 @@ abstract class Event
 
     public function assertCurrentState(State $state): void
     {
+        $this->model->unsetRelations();
         $this->model->refresh();
         if (!$state->is($this->model->getState())) {
             throw new UnexpectedStateException(
