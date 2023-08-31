@@ -20,6 +20,17 @@ The current state handles incoming events and *transitions* the model into anoth
 - Side effects can be deferred for processing to after the transition is completed.
 - Any anomalies during transitions throws exceptions, triggering transaction rollback.
 
+## Project status
+
+I, Björn Nilsved, created this package back in 2020 for a Laravel app that has been in production since 2021.
+The development process of the state machine functionality was rather exploratory and focused on the needs of that specific app.
+As the state machine API, base classes, etc were very much in flux, I wrote specific tests in the app itself, and held off writing generic tests for the package until the structure had stabilised.
+Of course, once the API was stable and the app was deployed I never got around to writing those tests or documentation for the package as planned...
+
+For my own needs this situation is fine, I'm confident in the test suite of my app.
+Should others show interest in this package I'd be willing to put some effort in to set up proper testing and documentation for release of a stable `1.0` version.
+Please get in touch if this is something you'd like to see happen!
+
 ## Requirements
 
 Row-level locking is only supported in MySQL / MariaDB and PostgreSQL.
