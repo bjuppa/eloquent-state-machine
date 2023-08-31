@@ -29,7 +29,7 @@ Of course, once the API was stable and the app was deployed I never got around t
 
 For my own needs this situation is fine, I'm confident in the test suite of my app.
 Should others show interest in this package I'd be willing to put some effort in to set up proper testing and documentation for release of a stable `1.0` version.
-Please get in touch if this is something you'd like to see happen!
+Please [get in touch](https://github.com/bjuppa/eloquent-state-machine/issues/5) if this is something you'd like to see happen!
 
 ## Requirements
 
